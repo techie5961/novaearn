@@ -37,6 +37,9 @@
         --bg:black;
         --bg-light:#111;
     }
+    nav .body{
+        overflow:auto;
+    }
 </style>
   @yield('css')
 </head>
@@ -74,7 +77,7 @@
        </div>
     </header>
     <nav onclick="HideNav()">
-        <section onclick="StopPropagation(event)" class="house column overflow-m-y-auto">
+        <section onclick="StopPropagation(event)" class="house column overflow-y-auto">
         <div style="border-bottom:0.1px solid #708090" class="head low p-10 bg-inherit pos-stick align-center stick-top row space-between">
             <img style="width:50%" src="{{ asset('images/logo.png?v='.config('versions.vite_version').'') }}" alt="">
             <svg class="pc-display-none" onclick="HideNav()" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#708090" viewBox="0 0 256 256"><path d="M208.49,191.51a12,12,0,0,1-17,17L128,145,64.49,208.49a12,12,0,0,1-17-17L111,128,47.51,64.49a12,12,0,0,1,17-17L128,111l63.51-63.52a12,12,0,0,1,17,17L145,128Z"></path></svg>

@@ -238,7 +238,7 @@ button.post{
 }
 @media(max-width:800px){
 body.nav-shown{
-    overflow:hidden;
+    overflow:auto;
 }
 body.nav-shown nav{
     display:flex;
