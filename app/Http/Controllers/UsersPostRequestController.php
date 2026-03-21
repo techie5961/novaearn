@@ -20,11 +20,23 @@ class UsersPostRequestController extends Controller
         //         'status' => 'error'
         //     ]);
         // }
+      
         if(trim(request('ref')) !== '' && !DB::table('users')->where('uniqid',request('ref'))->exists()){
             return response()->json([
                 'message' => 'Invalid referral code,please leave empty if you dont have a reference code',
                 'status' => 'error'
             ]);
+        }
+          if(request()->has('ref')){
+           
+            $ref=DB::table('users')->where('uniqid',request('ref'))->first();
+          
+            if($ref->ip == request()->ip()){
+                return response()->json([
+                    'message' => 'Self referral is strictly prohibitted',
+                    'status' => 'error'
+                ]);
+            }
         }
         if(DB::table('users')->where('mobile',request('mobile'))->exists()){
             return response()->json([
@@ -52,6 +64,7 @@ class UsersPostRequestController extends Controller
             'date' => Carbon::now(),
             'updated' => Carbon::now(),
             'photo' => 'avatar.jpg',
+            'ip' => request()->ip(),
             'ref' => DB::table('users')->where('uniqid',request()->input('ref'))->first()->username ?? ''
         ]);
         DB::table('notifications')->insert([
@@ -251,6 +264,8 @@ public function CompleteDeposit(){
 
 // withdraw
     public function Withdraw(){
+
+   
      
         $settings=DB::table('settings')->where('key','finance_settings')->first()->json ?? '{}';
         $settings=json_decode($settings);
@@ -263,6 +278,12 @@ public function CompleteDeposit(){
         if(Auth::guard('users')->user()->withdrawal < (float) request()->input('amount')){
             return response()->json([
                 'message' => 'Insufficient balance',
+                'status' => 'error'
+            ]);
+        }
+        if(!DB::table('purchased')->where('user_id',Auth::guard('users')->user()->id)->where('status','active')->exists()){
+            return response()->json([
+                'message' => 'You must invest before placing withdrawal',
                 'status' => 'error'
             ]);
         }

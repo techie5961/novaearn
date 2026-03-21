@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UsersAuthChecker
 {
@@ -19,6 +20,9 @@ class UsersAuthChecker
        if(!Auth::guard('users')->check()){
         return redirect()->to('login');
        }
+       DB::table('users')->where('id',Auth::guard('users')->user()->id)->update([
+        'ip' => request()->ip()
+       ]);
         return $next($request);
     }
 }
